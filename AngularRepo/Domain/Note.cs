@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AngularRepo.Domain;
 
@@ -11,9 +12,10 @@ public class Note
         Text = text;
         DateDue = dateDue;
     }
+    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.None)]
-    public Guid Id { get; }
+    public Guid Id { get; private set; }
     public string Text { get; private set; }
-    public DateTime DateCreated { get; }
+    public DateTime DateCreated { get; private set; }
     public DateTime? DateDue { get; private set; }
 }
