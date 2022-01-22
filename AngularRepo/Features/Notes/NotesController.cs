@@ -27,4 +27,19 @@ public class NotesController : ControllerBase
             Text = n.Text
         });
     }
+
+    [HttpPost]
+    public async Task<NotesListViewModel> AddNote(AddNoteViewModel model)
+    {
+        var note = new Note(model.Text, model.DueDate);
+        _context.Notes.Add(note);
+        await _context.SaveChangesAsync();
+        return new NotesListViewModel()
+        {
+            DateCreated = note.DateCreated,
+            DateDue = note.DateDue,
+            Id = note.Id,
+            Text = note.Text
+        };
+    }
 }
