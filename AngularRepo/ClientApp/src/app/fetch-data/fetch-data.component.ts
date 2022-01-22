@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { FetchDataService } from './fetch-data.service';
 
 @Component({
   selector: 'app-fetch-data',
@@ -8,17 +8,25 @@ import { HttpClient } from '@angular/common/http';
 export class FetchDataComponent {
   public notes: Note[] = [];
   public forecasts: WeatherForecast[] = [];
+  public fetchDataService: FetchDataService;
+  public note: Note = { dateDue: new Date(), dateCreated: new Date(), text: "" };
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<Note[]>(baseUrl + 'api/notes').subscribe(result => {
+  constructor(fetchDataService: FetchDataService) {
+    fetchDataService.getNotes().subscribe(result => {
       this.notes = result;
     }, error => console.error(error));
+    this.fetchDataService = fetchDataService;
+  }
+
+  public async postNote() {
+    this.fetchDataService.postNote(this.note.text, this.note.dateDue)
+      .subscribe(result => this.notes = this.notes.concat(result));
   }
 }
 
 interface Note {
-  dateCreated: string;
-  dateDue: string;
+  dateCreated: Date | undefined;
+  dateDue: Date | undefined;
   text: string;
 }
 

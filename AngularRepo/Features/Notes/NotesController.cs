@@ -31,7 +31,7 @@ public class NotesController : ControllerBase
     [HttpPost]
     public async Task<NotesListViewModel> AddNote(AddNoteViewModel model)
     {
-        var note = new Note(model.Text, model.DueDate);
+        var note = new Note(model.Text, model.DateDue);
         _context.Notes.Add(note);
         await _context.SaveChangesAsync();
         return new NotesListViewModel()

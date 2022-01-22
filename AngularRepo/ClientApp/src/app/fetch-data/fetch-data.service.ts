@@ -10,7 +10,7 @@ import { Note } from './note';
 })
 export class FetchDataService {
   private url = ""
-  constructor(private http: HttpClient, @Inject('Base_URL') baseUrl: string) { this.url = baseUrl + "api/notes" }
+  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl + "api/notes" }
 
   getNotes() {
     return this.http.get<Note[]>(this.url)
