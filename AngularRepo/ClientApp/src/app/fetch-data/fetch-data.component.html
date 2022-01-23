@@ -12,6 +12,7 @@
       <th>DateCreated</th>
       <th>Text</th>
       <th>DateDue</th>
+      <th>Delete</th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,7 @@
       <td>{{ note.dateCreated  | date:'medium' }}</td>
       <td>{{ note.text }}</td>
       <td>{{ note.dateDue | date }}</td>
+      <td><button class="btn" (click)="deleteNote(note)">delete</button></td>
     </tr>
   </tbody>
 </table>

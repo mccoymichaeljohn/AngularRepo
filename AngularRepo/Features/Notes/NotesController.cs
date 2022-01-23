@@ -18,7 +18,7 @@ public class NotesController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<NotesListViewModel>> GetNotes()
     {
-        var notes = await _context.Notes.ToArrayAsync();
+        var notes = await _context.Notes.OrderBy(n => n.DateCreated).ToArrayAsync();
         return notes.Select(n => new NotesListViewModel() 
         { 
             DateCreated = n.DateCreated, 
@@ -41,5 +41,14 @@ public class NotesController : ControllerBase
             Id = note.Id,
             Text = note.Text
         };
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteNote(Guid id)
+    {
+        var note = await _context.Notes.FirstAsync(n => n.Id == id);
+        _context.Remove(note);
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }

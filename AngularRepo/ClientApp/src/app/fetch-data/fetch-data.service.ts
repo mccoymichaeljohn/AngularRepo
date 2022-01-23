@@ -22,6 +22,11 @@ export class FetchDataService {
       .pipe(map(data => data), catchError(this.handleError));
   }
 
+  deleteNote(id: string) {
+    return this.http.delete(this.url + `/${id}`)
+      .pipe(map(data => data), catchError(this.handleError));
+  }
+
   private handleError(res: HttpErrorResponse | any) {
     console.error(res.error || res.body.error);
     return observableThrowError(res.error || 'Server error');

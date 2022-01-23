@@ -9,7 +9,7 @@ export class FetchDataComponent {
   public notes: Note[] = [];
   public forecasts: WeatherForecast[] = [];
   public fetchDataService: FetchDataService;
-  public note: Note = { dateDue: new Date(), dateCreated: new Date(), text: "" };
+  public note: Note = { id: "", dateDue: new Date(), dateCreated: new Date(), text: "" };
 
   constructor(fetchDataService: FetchDataService) {
     fetchDataService.getNotes().subscribe(result => {
@@ -22,9 +22,16 @@ export class FetchDataComponent {
     this.fetchDataService.postNote(this.note.text, this.note.dateDue)
       .subscribe(result => this.notes = this.notes.concat(result));
   }
+
+  public async deleteNote(note: Note) {
+    console.log(note.id);
+    this.fetchDataService.deleteNote(note.id)
+      .subscribe(x => this.notes = this.notes.filter(n => n != note));
+  }
 }
 
 interface Note {
+  id: string;
   dateCreated: Date | undefined;
   dateDue: Date | undefined;
   text: string;
