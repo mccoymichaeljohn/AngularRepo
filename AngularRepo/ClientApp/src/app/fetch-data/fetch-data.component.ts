@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FetchDataService } from './fetch-data.service';
+import { Note } from './note';
 
 @Component({
   selector: 'app-fetch-data',
@@ -7,15 +8,20 @@ import { FetchDataService } from './fetch-data.service';
 })
 export class FetchDataComponent {
   public notes: Note[] = [];
-  public forecasts: WeatherForecast[] = [];
   public fetchDataService: FetchDataService;
   public note: Note = { id: "", dateDue: new Date(), dateCreated: new Date(), text: "" };
+  public selectedNote: Note | null;
 
   constructor(fetchDataService: FetchDataService) {
-    fetchDataService.getNotes().subscribe(result => {
+    this.fetchDataService = fetchDataService;
+    this.getNotes();
+    this.selectedNote = null;
+  }
+
+  public async getNotes() {
+    this.fetchDataService.getNotes().subscribe(result => {
       this.notes = result;
     }, error => console.error(error));
-    this.fetchDataService = fetchDataService;
   }
 
   public async postNote() {
@@ -24,22 +30,30 @@ export class FetchDataComponent {
   }
 
   public async deleteNote(note: Note) {
-    console.log(note.id);
     this.fetchDataService.deleteNote(note.id)
       .subscribe(x => this.notes = this.notes.filter(n => n != note));
   }
-}
 
-interface Note {
-  id: string;
-  dateCreated: Date | undefined;
-  dateDue: Date | undefined;
-  text: string;
-}
+  public async updateText(note: Note, text: string) {
+    this.notes = this.notes.map(n => n.id == note.id ? new Note(note.id, text, note.dateCreated, note.dateDue) : n);
+    this.fetchDataService.updateNote(note.id, text, note.dateDue)
+      .subscribe(result => this.notes = this.notes.map(n => n.id == result.id ? result : n));
+    this.selectedNote = null;
+  }
 
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
+  public async updateDate(note: Note, date: Date | undefined) {
+    console.log(date);
+    this.notes = this.notes.map(n => n.id == note.id ? new Note(note.id, note.text, note.dateCreated, date) : n);
+    this.fetchDataService.updateNote(note.id, note.text, date)
+      .subscribe(result => this.notes = this.notes.map(n => n.id == result.id ? result : n));
+    this.selectedNote = null;
+  }
+
+  public cancelEdit() {
+    this.selectedNote = null;
+  }
+
+  public selectNote(note: Note): void {
+    this.selectedNote = note;
+  }
 }

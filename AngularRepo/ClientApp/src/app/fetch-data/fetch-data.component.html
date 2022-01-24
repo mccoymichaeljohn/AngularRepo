@@ -18,8 +18,31 @@
   <tbody>
     <tr *ngFor="let note of notes">
       <td>{{ note.dateCreated  | date:'medium' }}</td>
-      <td>{{ note.text }}</td>
-      <td>{{ note.dateDue | date }}</td>
+      <td [ngSwitch]="(note === selectedNote)">
+        <editable
+          *ngSwitchCase="true"
+          [type]="'text'"
+		  [value]="note.text"
+		  (textChange)="updateText( note, $event )"
+		  (cancel)="cancelEdit()">
+
+        </editable>
+        <div *ngSwitchCase="false" (click)="selectNote(note)">{{note.text}}</div>
+      </td>
+      <td [ngSwitch]="(note === selectedNote)">
+        <editable
+          *ngSwitchCase="true"
+          [type]="'date'"
+		  [value]="note.dateDue"
+		  (dateChange)="updateDate( note, $event )"
+		  (cancel)="cancelEdit()">
+
+        </editable>
+        <div *ngSwitchCase="false" (click)="selectNote(note)">
+          {{ note.dateDue | date }}
+        </div>
+
+      </td>
       <td><button class="btn" (click)="deleteNote(note)">delete</button></td>
     </tr>
   </tbody>

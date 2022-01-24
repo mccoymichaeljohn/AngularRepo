@@ -27,6 +27,11 @@ export class FetchDataService {
       .pipe(map(data => data), catchError(this.handleError));
   }
 
+  updateNote(id: string, text: string, dateDue: Date | undefined) {
+    return this.http.put<Note>(this.url + `/${id}`, { text, dateDue })
+      .pipe(map(data => data), catchError(this.handleError));
+  }
+
   private handleError(res: HttpErrorResponse | any) {
     console.error(res.error || res.body.error);
     return observableThrowError(res.error || 'Server error');

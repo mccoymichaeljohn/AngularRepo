@@ -51,4 +51,20 @@ public class NotesController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+
+    [HttpPut("{id}")]
+    public async Task<NotesListViewModel> UpdateNote(Guid id, UpdateNoteViewModel model)
+    {
+        var note = await _context.Notes.FirstAsync(n => n.Id == id);
+        note.SetText(model.Text);
+        note.SetDateDue(model.DateDue);
+        await _context.SaveChangesAsync();
+        return new NotesListViewModel()
+        {
+            DateCreated = note.DateCreated,
+            DateDue = note.DateDue,
+            Id = note.Id,
+            Text = note.Text
+        };
+    }
 }
