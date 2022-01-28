@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
-import { FetchDataService } from './fetch-data.service';
+import { ApiService } from './api.service';
 import { Note, NoteType } from './note';
 
 @Component({
-  selector: 'app-fetch-data',
-  templateUrl: './fetch-data.component.html',
-  styleUrls: ['./fetch-data.component.css']
+  selector: 'todos',
+  templateUrl: './todo.component.html',
+  styleUrls: ['./todo.component.css']
 })
-export class FetchDataComponent {
+export class TodoComponent {
   public notes: Note[] = [];
-  public fetchDataService: FetchDataService;
+  public fetchDataService: ApiService;
   public note: Note = { id: "", noteType: NoteType.Note, dateDue: new Date(), dateCreated: new Date(), text: "", isCompleted: false };
   public selectedNote: Note | null;
 
-  constructor(fetchDataService: FetchDataService) {
+  constructor(fetchDataService: ApiService) {
     this.fetchDataService = fetchDataService;
     this.getNotes();
     this.selectedNote = null;

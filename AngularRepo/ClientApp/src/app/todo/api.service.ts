@@ -8,7 +8,7 @@ import { Note, NoteType } from './note';
 @Injectable({
   providedIn: 'root'
 })
-export class FetchDataService {
+export class ApiService {
   private url = ""
   constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) { this.url = baseUrl + "api/notes" }
 

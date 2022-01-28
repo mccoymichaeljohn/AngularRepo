@@ -24,7 +24,9 @@ public class NotesController : ControllerBase
             DateCreated = n.DateCreated, 
             DateDue = n.DateDue, 
             Id = n.Id, 
-            Text = n.Text
+            Text = n.Text,
+            IsCompleted = n.IsCompleted,
+            NoteType = n.NoteType
         });
     }
 
