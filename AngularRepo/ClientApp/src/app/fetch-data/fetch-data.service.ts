@@ -3,7 +3,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Note } from './note';
+import { Note, NoteType } from './note';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,8 @@ export class FetchDataService {
       .pipe(map(data => data), catchError(this.handleError));
   }
 
-  postNote(text: string, dateDue: Date | undefined) {
-    return this.http.post<Note>(this.url, { text, dateDue })
+  postNote(noteType: NoteType, text: string, dateDue: Date | undefined) {
+    return this.http.post<Note>(this.url, {noteType, text, dateDue })
       .pipe(map(data => data), catchError(this.handleError));
   }
 
@@ -27,8 +27,8 @@ export class FetchDataService {
       .pipe(map(data => data), catchError(this.handleError));
   }
 
-  updateNote(id: string, text: string, dateDue: Date | undefined) {
-    return this.http.put<Note>(this.url + `/${id}`, { text, dateDue })
+  updateNote(id: string, text: string, dateDue: Date | undefined, isCompleted: boolean) {
+    return this.http.put<Note>(this.url + `/${id}`, { text, dateDue, isCompleted })
       .pipe(map(data => data), catchError(this.handleError));
   }
 

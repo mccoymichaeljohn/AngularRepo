@@ -31,7 +31,7 @@ public class NotesController : ControllerBase
     [HttpPost]
     public async Task<NotesListViewModel> AddNote(AddNoteViewModel model)
     {
-        var note = new Note(model.Text, model.DateDue);
+        var note = new Note(model.NoteType, model.Text, model.DateDue);
         _context.Notes.Add(note);
         await _context.SaveChangesAsync();
         return new NotesListViewModel()
@@ -39,7 +39,9 @@ public class NotesController : ControllerBase
             DateCreated = note.DateCreated,
             DateDue = note.DateDue,
             Id = note.Id,
-            Text = note.Text
+            Text = note.Text,
+            NoteType = note.NoteType,
+            IsCompleted = note.IsCompleted
         };
     }
 
@@ -58,13 +60,16 @@ public class NotesController : ControllerBase
         var note = await _context.Notes.FirstAsync(n => n.Id == id);
         note.SetText(model.Text);
         note.SetDateDue(model.DateDue);
+        note.SetCompleted(model.IsCompleted);
         await _context.SaveChangesAsync();
         return new NotesListViewModel()
         {
             DateCreated = note.DateCreated,
             DateDue = note.DateDue,
             Id = note.Id,
-            Text = note.Text
+            Text = note.Text,
+            NoteType = note.NoteType,
+            IsCompleted = note.IsCompleted
         };
     }
 }

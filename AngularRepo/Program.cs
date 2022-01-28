@@ -1,12 +1,14 @@
 using AngularRepo.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(o =>
+    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 var app = builder.Build();
 

@@ -5,10 +5,16 @@
 <p *ngIf="!notes"><em>Loading...</em></p>
 <input type="text" id="note-text" [(ngModel)]="note.text" />
 <input type="date" id="note-date" [(ngModel)]="note.dateDue" />
+<select name="note-type" id="note-type" [(ngModel)]="note.noteType">
+  <option value="note">Note</option>
+  <option value="task">Task</option>
+  <option value="event">Event</option>
+</select>
 <button class="btn btn-primary" (click)="postNote()">submit</button>
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="notes">
   <thead>
     <tr>
+      <th>Type</th>
       <th>DateCreated</th>
       <th>Text</th>
       <th>DateDue</th>
@@ -17,6 +23,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let note of notes">
+      <td [class.completed]="note.isCompleted" (click)="toggleCompletion(note)">{{note.noteType}}</td>
       <td>{{ note.dateCreated  | date:'medium' }}</td>
       <td [ngSwitch]="(note === selectedNote)">
         <editable
