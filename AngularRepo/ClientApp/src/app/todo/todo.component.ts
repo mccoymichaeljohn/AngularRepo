@@ -10,7 +10,7 @@ import { Note, NoteType } from './note';
 export class TodoComponent {
   public notes: Note[] = [];
   public fetchDataService: ApiService;
-  public note: Note = { id: "", noteType: NoteType.Note, dateDue: new Date(), dateCreated: new Date(), text: "", isCompleted: false };
+  public note: Note = { id: "", noteType: NoteType.Note, dateDue: undefined, dateCreated: new Date(), text: "", isCompleted: false };
   public selectedNote: Note | null;
 
   constructor(fetchDataService: ApiService) {
@@ -62,5 +62,10 @@ export class TodoComponent {
 
   public selectNote(note: Note): void {
     this.selectedNote = note;
+  }
+
+  public late(date: Date | undefined | null): boolean {
+    if (date !== undefined && date !== null && new Date(date) < new Date()) return true;
+    return false;
   }
 }

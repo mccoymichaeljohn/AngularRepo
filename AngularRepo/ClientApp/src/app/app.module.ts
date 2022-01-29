@@ -3,11 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { TodoComponent } from './todo/todo.component';
 import { EditableComponent } from './shared/editable/editable.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { EditableComponent } from './shared/editable/editable.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: TodoComponent, pathMatch: 'full' },
-    ])
+    ]),
+    BrowserAnimationsModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

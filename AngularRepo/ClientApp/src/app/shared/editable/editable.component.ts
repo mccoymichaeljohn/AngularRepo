@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'editable',
@@ -10,8 +10,8 @@ import { Component, EventEmitter } from '@angular/core';
   ],
   template: `
     <input
-			type="type"
-			name="value"
+			type={{type}}
+			name=value
 			autofocus
 			[(ngModel)]="pendingValue"
 			(keydown.Enter)="processChanges()"
@@ -21,7 +21,8 @@ import { Component, EventEmitter } from '@angular/core';
   `
 })
 export class EditableComponent {
-  public type!: "text" | "date";
+  @Input() type: "text" | "date" = "text";
+  //public type!: "text" | "date";
   public cancelEvents: EventEmitter<void>;
   public pendingValue: string | Date | undefined | null;
   public value!: string | Date | undefined | null;

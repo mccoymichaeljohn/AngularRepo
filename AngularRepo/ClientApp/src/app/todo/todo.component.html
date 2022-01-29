@@ -43,12 +43,15 @@
 		  (cancel)="cancelEdit()">
 
         </editable>
-        <div *ngSwitchCase="false" (click)="selectNote(note)">
+        <div [class.late]="late(note.dateDue)" *ngSwitchCase="false" (click)="selectNote(note)">
           {{ note.dateDue | date }}
         </div>
 
       </td>
-      <td><button class="btn" (click)="deleteNote(note)">delete</button></td>
+      <td><button class="btn" (click)="deleteNote(note)">
+        <mat-icon aria-hidden="true" aria-label="delete icon">delete</mat-icon>
+
+      </button></td>
     </tr>
   </tbody>
 </table>
