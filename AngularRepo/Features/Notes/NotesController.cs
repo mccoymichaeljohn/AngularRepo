@@ -1,6 +1,5 @@
-﻿using AngularRepo.Domain;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AngularRepo.Features.Notes;
 
@@ -8,70 +7,35 @@ namespace AngularRepo.Features.Notes;
 [ApiController]
 public class NotesController : ControllerBase
 {
-    private readonly ApplicationContext _context;
+    private readonly IMediator _mediatr;
 
-    public NotesController(ApplicationContext context)
+    public NotesController(IMediator mediator)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _mediatr = mediator ?? throw new ArgumentNullException(nameof(_mediatr));
     }
 
     [HttpGet]
-    public async Task<IEnumerable<NotesListViewModel>> GetNotes()
+    public async Task<IEnumerable<NotesListViewModel>> GetNotes(CancellationToken cancellationToken = default)
     {
-        var notes = await _context.Notes.OrderBy(n => n.DateCreated).ToArrayAsync();
-        return notes.Select(n => new NotesListViewModel() 
-        { 
-            DateCreated = n.DateCreated, 
-            DateDue = n.DateDue, 
-            Id = n.Id, 
-            Text = n.Text,
-            IsCompleted = n.IsCompleted,
-            NoteType = n.NoteType
-        });
+        return await _mediatr.Send(new GetNotesQuery(), cancellationToken);
     }
 
     [HttpPost]
-    public async Task<NotesListViewModel> AddNote(AddNoteViewModel model)
+    public async Task<NotesListViewModel> AddNote(AddNoteViewModel model, CancellationToken cancellationToken = default)
     {
-        var note = new Note(model.NoteType, model.Text, model.DateDue);
-        _context.Notes.Add(note);
-        await _context.SaveChangesAsync();
-        return new NotesListViewModel()
-        {
-            DateCreated = note.DateCreated,
-            DateDue = note.DateDue,
-            Id = note.Id,
-            Text = note.Text,
-            NoteType = note.NoteType,
-            IsCompleted = note.IsCompleted
-        };
+        return await _mediatr.Send(new AddNoteCommand(model.Text, model.DateDue, model.NoteType), cancellationToken);
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteNote(Guid id)
+    public async Task<ActionResult> DeleteNote(Guid id, CancellationToken cancellationToken = default)
     {
-        var note = await _context.Notes.FirstAsync(n => n.Id == id);
-        _context.Remove(note);
-        await _context.SaveChangesAsync();
+        await _mediatr.Send(new DeleteNoteCommand(id), cancellationToken);
         return Ok();
     }
 
     [HttpPut("{id}")]
-    public async Task<NotesListViewModel> UpdateNote(Guid id, UpdateNoteViewModel model)
+    public async Task<NotesListViewModel> UpdateNote(Guid id, UpdateNoteViewModel model, CancellationToken cancellationToken = default)
     {
-        var note = await _context.Notes.FirstAsync(n => n.Id == id);
-        note.SetText(model.Text);
-        note.SetDateDue(model.DateDue);
-        note.SetCompleted(model.IsCompleted);
-        await _context.SaveChangesAsync();
-        return new NotesListViewModel()
-        {
-            DateCreated = note.DateCreated,
-            DateDue = note.DateDue,
-            Id = note.Id,
-            Text = note.Text,
-            NoteType = note.NoteType,
-            IsCompleted = note.IsCompleted
-        };
+        return await _mediatr.Send(new UpdateNoteCommand(id, model.Text, model.DateDue, model.IsCompleted), cancellationToken);
     }
 }

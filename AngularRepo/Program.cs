@@ -1,6 +1,7 @@
 using AngularRepo.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllersWithViews().AddJsonOptions(o =>
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddMediatR(typeof(Program).Assembly);
 
 var app = builder.Build();
 
